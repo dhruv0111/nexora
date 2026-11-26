@@ -1,0 +1,376 @@
+[
+  {
+    "slug": "qa-sdet",
+    "title": "QA / SDET",
+    "track": "QA_SDET",
+    "description": "Test the details. Protect the experience.",
+    "previewVisible": true,
+    "durationWeeks": 24,
+    "deliveryFormat": "Proposed live mentor-led training",
+    "audience": [
+      "Career-switchers exploring a structured technical path.",
+      "Learners able to practice regularly and contribute to supervised projects."
+    ],
+    "prerequisites": [
+      "Basic computer literacy and confidence navigating web applications.",
+      "No prior programming experience is assumed in this illustrative outline."
+    ],
+    "skills": [
+      "Design thoughtful test cases",
+      "Automate browser and API checks",
+      "Investigate failures and report evidence"
+    ],
+    "technologies": [
+      "TypeScript",
+      "Playwright",
+      "API testing",
+      "GitHub Actions"
+    ],
+    "assessmentRequired": false,
+    "modules": [
+      {
+        "startWeek": 1,
+        "title": "Quality foundations",
+        "summary": "Think critically about behavior, risk, and evidence.",
+        "weeklyTopics": [
+          "Software delivery and the tester\u2019s role",
+          "Test design, boundaries, and equivalence classes",
+          "Defect reports, exploratory testing, and accessibility",
+          "Agile collaboration and practical test planning"
+        ]
+      },
+      {
+        "startWeek": 5,
+        "title": "Programming for testing",
+        "summary": "Build a working foundation before automating.",
+        "weeklyTopics": [
+          "TypeScript values, control flow, and functions",
+          "Collections, objects, and data handling",
+          "Git, branching, and collaborative reviews",
+          "Debugging, asynchronous code, and small utilities"
+        ]
+      },
+      {
+        "startWeek": 9,
+        "title": "Browser automation",
+        "summary": "Create maintainable checks for user journeys.",
+        "weeklyTopics": [
+          "Playwright setup, locators, and assertions",
+          "Fixtures, isolation, and reliable test data",
+          "Forms, network control, and authentication tests",
+          "Page abstractions, traces, and failure investigation"
+        ]
+      },
+      {
+        "startWeek": 13,
+        "title": "APIs and data",
+        "summary": "Check the boundaries between services.",
+        "weeklyTopics": [
+          "HTTP, contracts, and API test design",
+          "API automation and negative-path checks",
+          "SQL foundations and data verification",
+          "Integration testing and environment strategy"
+        ]
+      },
+      {
+        "startWeek": 17,
+        "title": "Delivery and nonfunctional quality",
+        "summary": "Make checks useful in a delivery pipeline.",
+        "weeklyTopics": [
+          "CI pipelines, artifacts, and test reporting",
+          "Risk-based regression and test-suite maintenance",
+          "Performance and security testing fundamentals",
+          "Accessibility checks and quality review practices"
+        ]
+      },
+      {
+        "startWeek": 21,
+        "title": "Supervised product sprint",
+        "summary": "Contribute clear evidence and explain your decisions.",
+        "weeklyTopics": [
+          "HireFlow test strategy and scoped backlog",
+          "Implement and review product checks",
+          "Investigate defects and present sprint evidence",
+          "Portfolio walkthrough and technical interview practice"
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "full-stack",
+    "title": "Full-Stack Development",
+    "track": "FULL_STACK",
+    "description": "Bring the interface and the system together.",
+    "previewVisible": true,
+    "durationWeeks": 24,
+    "deliveryFormat": "Proposed live mentor-led training",
+    "audience": [
+      "Career-switchers exploring a structured technical path.",
+      "Learners able to practice regularly and contribute to supervised projects."
+    ],
+    "prerequisites": [
+      "Basic computer literacy and time for regular coding practice.",
+      "This illustrative beginner outline starts with web and programming foundations."
+    ],
+    "skills": [
+      "Build accessible web interfaces",
+      "Design typed APIs and relational data",
+      "Test, deploy, and explain a product feature"
+    ],
+    "technologies": ["React", "TypeScript", "Node.js", "PostgreSQL"],
+    "assessmentRequired": false,
+    "modules": [
+      {
+        "startWeek": 1,
+        "title": "Web foundations",
+        "summary": "Understand how a browser becomes a product interface.",
+        "weeklyTopics": [
+          "Semantic HTML and accessible forms",
+          "CSS layout and responsive composition",
+          "JavaScript values, functions, and browser events",
+          "Git, debugging, and a small interactive page"
+        ]
+      },
+      {
+        "startWeek": 5,
+        "title": "Application programming",
+        "summary": "Write code that stays understandable as it grows.",
+        "weeklyTopics": [
+          "TypeScript types, objects, and modules",
+          "Asynchronous JavaScript and HTTP requests",
+          "Error handling and practical unit tests",
+          "Application structure and collaborative code review"
+        ]
+      },
+      {
+        "startWeek": 9,
+        "title": "Frontend product development",
+        "summary": "Compose interfaces around user tasks.",
+        "weeklyTopics": [
+          "React components, state, and composition",
+          "Forms, validation, and accessible feedback",
+          "Routing, server rendering, and data fetching",
+          "UI testing, loading states, and responsive reviews"
+        ]
+      },
+      {
+        "startWeek": 13,
+        "title": "Backend and relational data",
+        "summary": "Build secure boundaries behind the interface.",
+        "weeklyTopics": [
+          "Node.js API design and input validation",
+          "SQL, relational modeling, and migrations",
+          "Authentication, roles, and resource ownership",
+          "Integration tests and transactional operations"
+        ]
+      },
+      {
+        "startWeek": 17,
+        "title": "Reliable delivery",
+        "summary": "Move a feature from local code to an operated service.",
+        "weeklyTopics": [
+          "Testing across the stack and CI automation",
+          "Deployment configuration and secret handling",
+          "Performance profiling and practical observability",
+          "API hardening and failure recovery"
+        ]
+      },
+      {
+        "startWeek": 21,
+        "title": "Supervised product sprint",
+        "summary": "Build a feature you can explain from end to end.",
+        "weeklyTopics": [
+          "HireFlow feature scope and data contracts",
+          "Implement, test, and review the feature",
+          "Resolve review feedback and demonstrate the product",
+          "Portfolio documentation and technical interview practice"
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "ai-engineering",
+    "title": "AI Engineering",
+    "track": "AI_ENGINEERING",
+    "description": "Build intelligence you can evaluate.",
+    "previewVisible": true,
+    "durationWeeks": 24,
+    "deliveryFormat": "Proposed live mentor-led training",
+    "audience": [
+      "Career-switchers exploring a structured technical path.",
+      "Learners able to practice regularly and contribute to supervised projects."
+    ],
+    "prerequisites": [
+      "Working knowledge of Python functions, collections, and debugging.",
+      "Comfort with basic algebra, data handling, and HTTP/API concepts.",
+      "A reviewed prerequisite assessment is required before admission; this draft is not an approved admissions policy."
+    ],
+    "skills": [
+      "Build and evaluate an AI feature",
+      "Use retrieval and model APIs responsibly",
+      "Test, observe, and explain an AI application"
+    ],
+    "technologies": ["Python", "LLM APIs", "Retrieval", "Evaluation"],
+    "assessmentRequired": true,
+    "modules": [
+      {
+        "startWeek": 1,
+        "title": "Python and data readiness",
+        "summary": "Check foundations before building model-driven behavior.",
+        "weeklyTopics": [
+          "Python readiness review and prerequisite assessment",
+          "Data cleaning, typing, and reproducible notebooks",
+          "Linear algebra and probability concepts for applications",
+          "APIs, Git, and small testable Python services"
+        ]
+      },
+      {
+        "startWeek": 5,
+        "title": "Machine learning foundations",
+        "summary": "Understand evaluation rather than relying on a demo.",
+        "weeklyTopics": [
+          "Features, training data, and leakage",
+          "Regression, classification, and baseline models",
+          "Validation splits and meaningful evaluation metrics",
+          "Error analysis, bias, and documentation"
+        ]
+      },
+      {
+        "startWeek": 9,
+        "title": "LLM application foundations",
+        "summary": "Connect models to bounded product tasks.",
+        "weeklyTopics": [
+          "Model APIs, structured outputs, and prompting",
+          "Input validation, retries, and cost awareness",
+          "Embeddings and semantic retrieval concepts",
+          "Retrieval pipelines and grounding checks"
+        ]
+      },
+      {
+        "startWeek": 13,
+        "title": "Evaluation and safeguards",
+        "summary": "Make behavior inspectable and failure-aware.",
+        "weeklyTopics": [
+          "Build task-specific evaluation datasets",
+          "Measure relevance and compare alternatives",
+          "Prompt injection awareness and sensitive-data handling",
+          "Tool boundaries, human review, and adversarial cases"
+        ]
+      },
+      {
+        "startWeek": 17,
+        "title": "Deploying AI features",
+        "summary": "Operate a small feature with practical controls.",
+        "weeklyTopics": [
+          "API integration and background processing",
+          "Observability, latency, and usage budgets",
+          "Versioning prompts, data, and evaluation results",
+          "Testing, deployment, and rollback practices"
+        ]
+      },
+      {
+        "startWeek": 21,
+        "title": "Supervised product sprint",
+        "summary": "Contribute an evaluated feature, not an unsupported promise.",
+        "weeklyTopics": [
+          "HireFlow AI feature scope and acceptance criteria",
+          "Implement a bounded prototype and evaluations",
+          "Review limitations, failures, and product integration",
+          "Portfolio evidence and technical interview practice"
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "data-analytics",
+    "title": "Data Analytics",
+    "track": "DATA_ANALYTICS",
+    "description": "Turn questions into evidence.",
+    "previewVisible": true,
+    "durationWeeks": 24,
+    "deliveryFormat": "Proposed live mentor-led training",
+    "audience": [
+      "Career-switchers exploring a structured technical path.",
+      "Learners able to practice regularly and contribute to supervised projects."
+    ],
+    "prerequisites": [
+      "Basic spreadsheet familiarity and comfort interpreting numbers.",
+      "No prior professional analytics experience is assumed in this illustrative outline."
+    ],
+    "skills": [
+      "Query and validate relational data",
+      "Build clear analytical reports",
+      "Communicate limitations and decisions"
+    ],
+    "technologies": ["SQL", "Python", "Spreadsheets", "Dashboards"],
+    "assessmentRequired": false,
+    "modules": [
+      {
+        "startWeek": 1,
+        "title": "Analytical foundations",
+        "summary": "Start with the question and the quality of the evidence.",
+        "weeklyTopics": [
+          "Business questions, metrics, and analytical thinking",
+          "Spreadsheet cleaning and practical formulas",
+          "Data types, missing values, and quality checks",
+          "Descriptive statistics and responsible interpretation"
+        ]
+      },
+      {
+        "startWeek": 5,
+        "title": "SQL for analysis",
+        "summary": "Answer increasingly useful questions with relational data.",
+        "weeklyTopics": [
+          "Relational tables, filtering, and aggregation",
+          "Joins and data-grain pitfalls",
+          "Subqueries, common table expressions, and windows",
+          "SQL case study, validation, and review"
+        ]
+      },
+      {
+        "startWeek": 9,
+        "title": "Python analysis",
+        "summary": "Make analytical work reproducible.",
+        "weeklyTopics": [
+          "Python basics for analytical workflows",
+          "Dataframes, cleaning, and transformations",
+          "Exploration and practical visualizations",
+          "Reproducible notebooks and version control"
+        ]
+      },
+      {
+        "startWeek": 13,
+        "title": "Dashboards and communication",
+        "summary": "Design a useful view of a well-defined metric.",
+        "weeklyTopics": [
+          "Metric definitions and dashboard planning",
+          "Dashboard composition and interaction patterns",
+          "Accessible visual encoding and chart choices",
+          "Communicate findings, uncertainty, and limitations"
+        ]
+      },
+      {
+        "startWeek": 17,
+        "title": "Product and operational analytics",
+        "summary": "Connect events to a meaningful decision.",
+        "weeklyTopics": [
+          "Event design, funnels, and cohort concepts",
+          "Segmentation, retention, and trend analysis",
+          "Experiment basics and causal limitations",
+          "Stakeholder reporting and analytical review"
+        ]
+      },
+      {
+        "startWeek": 21,
+        "title": "Supervised product sprint",
+        "summary": "Explain the path from raw events to an insight.",
+        "weeklyTopics": [
+          "HireFlow analytical questions and sample events",
+          "Build validated queries and a focused dashboard",
+          "Review assumptions and present findings",
+          "Portfolio case study and interview practice"
+        ]
+      }
+    ]
+  }
+]
