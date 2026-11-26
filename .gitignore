@@ -1,13 +1,13 @@
 node_modules/
 .next/
-.env*
-!.env.example
-coverage/
-playwright-report/
-test-results/
-src/generated/
-*.tsbuildinfo
+# .env*
+# !.env.example
+# coverage/
+# playwright-report/
+# test-results/
+# src/generated/
+# *.tsbuildinfo
 
-# Retain local profiling traces without committing bulky raw events.
-docs/performance/*trace.json
-docs/performance/*devtoolslog.json
+# # Retain local profiling traces without committing bulky raw events.
+# docs/performance/*trace.json
+# docs/performance/*devtoolslog.json
