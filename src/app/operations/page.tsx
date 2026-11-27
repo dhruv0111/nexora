@@ -281,7 +281,7 @@ export default async function Operations({
         <h2>Student enrollments</h2>
         {rows.map((e) => (
           <p key={e.id}>
-            {e.user.name} · {e.cohort.name} · {e.status} ·{' '}
+            {e.user.name} · {e.id} · {e.cohort.name} · {e.status} ·{' '}
             {e.payments.some(
               (p) =>
                 p.verifiedAt && p.status === 'SUCCEEDED' && !p.refundedMinor,
@@ -292,6 +292,36 @@ export default async function Operations({
           </p>
         ))}
         {!rows.length && <p>No matching student enrollments.</p>}
+        {s.user.staffScope === 'SUPER_ADMIN' && (
+          <details>
+            <summary>Approve a paid enrollment under review</summary>
+            <p>
+              Approval rechecks verified payment, current admission, terms and
+              available capacity.
+            </p>
+            <ActionForm
+              namespace="operations"
+              action="approve-paid-review"
+              fields={[
+                f('enrollmentId', 'Enrollment ID'),
+                f(
+                  'reason',
+                  'Approval evidence and reason',
+                  undefined,
+                  'textarea',
+                ),
+                f(
+                  'confirm',
+                  'Confirm access approval',
+                  false,
+                  'checkbox',
+                  true,
+                ),
+              ]}
+              button="Approve reviewed access"
+            />
+          </details>
+        )}
         <h2>Mentor assignments</h2>
         {mentors.length && cohorts.length ? (
           <ActionForm
@@ -332,7 +362,27 @@ export default async function Operations({
       </>
     );
   } else if (area === 'FINANCE_STAFF') {
-    const r = await finance(id, from, to, cohort);
+    const [r, transactions] = await Promise.all([
+      finance(id, from, to, cohort),
+      db.payment.findMany({
+        where: {
+          createdAt: date,
+          ...(cohort ? { enrollment: { cohortId: cohort } } : {}),
+        },
+        orderBy: [{ createdAt: 'desc' }, { id: 'asc' }],
+        skip,
+        take: 20,
+        select: {
+          id: true,
+          status: true,
+          currency: true,
+          amountMinor: true,
+          verifiedAt: true,
+          reconciledAt: true,
+          providerRef: true,
+        },
+      }),
+    ]);
     body = (
       <>
         <h2>Verified cash collections</h2>
@@ -367,6 +417,26 @@ export default async function Operations({
         >
           Export financial report (JSON)
         </a>
+        <h2>Payment activity</h2>
+        {transactions.map((p) => (
+          <article key={p.id} className="career-card">
+            <strong>
+              {p.status} · {p.currency} {p.amountMinor} minor units
+            </strong>
+            <p>Payment ID · {p.id}</p>
+            <p>
+              {p.verifiedAt && p.providerRef
+                ? 'Verified capture · ' + p.providerRef
+                : 'Awaiting verified capture'}
+            </p>
+            <p>
+              {p.reconciledAt
+                ? 'Last reconciled · ' + p.reconciledAt.toISOString()
+                : 'Awaiting reconciliation'}
+            </p>
+          </article>
+        ))}
+        {!transactions.length && <p>No payments on this page.</p>}
         <h2>Refund requests</h2>
         {r.refunds.map((x) => (
           <p key={x.id}>

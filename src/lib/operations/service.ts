@@ -1,4 +1,5 @@
 import 'server-only';
+import { approvePaidReview } from '@/lib/payments/enrollment';
 import { z } from 'zod';
 import { getDb } from '@/lib/db';
 import { ensure } from '@/lib/domain/errors';
@@ -136,6 +137,18 @@ export async function mutate(actor: string, action: string, input: unknown) {
         });
         entity = b.mentorId;
         metadata = { cohortId: b.cohortId };
+        break;
+      }
+      case 'approve-paid-review': {
+        await authorize(actor, 'SUPER_ADMIN', tx);
+        const b = z
+          .object({ enrollmentId: ref, reason: note, confirm: z.literal(true) })
+          .strict()
+          .parse(input);
+        await approvePaidReview(tx, b.enrollmentId);
+        entity = b.enrollmentId;
+        event = 'PAID_ACCESS_REVIEW_APPROVED';
+        metadata = { reason: b.reason };
         break;
       }
       case 'refund': {

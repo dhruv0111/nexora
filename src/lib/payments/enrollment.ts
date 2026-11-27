@@ -1,6 +1,6 @@
 import 'server-only';
 import { z } from 'zod';
-import { serial, lock, audit } from '@/lib/domain/transaction';
+import { serial, lock, audit, type Tx } from '@/lib/domain/transaction';
 import { getDb } from '@/lib/db';
 import { ensure } from '@/lib/domain/errors';
 import {
@@ -391,30 +391,7 @@ export async function applyProviderState(
       'ORDER_NOT_PAID',
       'The order is not fully paid.',
     );
-    const app = enrollment.application;
-    const cohort = enrollment.cohort;
-    const occupied = await tx.enrollment.count({
-      where: {
-        cohortId: cohort.id,
-        id: { not: enrollment.id },
-        OR: [
-          { status: 'ACTIVE' },
-          { status: 'PENDING', reservedUntil: { gt: new Date() } },
-        ],
-      },
-    });
-    const eligible =
-      app?.status === 'ACCEPTED' &&
-      app.admittedCourseVersion === app.course?.contentVersion &&
-      (!app.course?.assessmentRequired || app.assessmentStatus === 'PASSED') &&
-      app.course?.status === 'PUBLISHED' &&
-      app.course.contentApprovedAt &&
-      enrollment.agreedAt &&
-      enrollment.agreementHash &&
-      cohort.status === 'PUBLISHED' &&
-      cohort.capacity !== null &&
-      occupied < cohort.capacity &&
-      enrollment.status !== 'CANCELLED';
+    const eligible = await eligibleForActivation(tx, enrollment);
     const status =
       enrollment.status === 'ACTIVE'
         ? 'ACTIVE'
@@ -584,4 +561,82 @@ export async function paidAccess(userId: string, enrollmentId: string) {
     'A verified paid enrollment is required.',
   );
   return { allowed: true, enrollmentId: e.id };
+}
+
+async function eligibleForActivation(
+  tx: Tx,
+  enrollment: import('@/generated/prisma/client').Prisma.EnrollmentGetPayload<{
+    include: { application: { include: { course: true } }; cohort: true };
+  }>,
+) {
+  const app = enrollment.application;
+  const cohort = enrollment.cohort;
+  const occupied = await tx.enrollment.count({
+    where: {
+      cohortId: cohort.id,
+      id: { not: enrollment.id },
+      OR: [
+        { status: 'ACTIVE' },
+        { status: 'PENDING', reservedUntil: { gt: new Date() } },
+      ],
+    },
+  });
+  return (
+    app?.status === 'ACCEPTED' &&
+    app.admittedCourseVersion === app.course?.contentVersion &&
+    (!app.course?.assessmentRequired || app.assessmentStatus === 'PASSED') &&
+    app.course?.status === 'PUBLISHED' &&
+    app.course.contentApprovedAt &&
+    enrollment.agreedAt &&
+    enrollment.agreementHash &&
+    cohort.status === 'PUBLISHED' &&
+    cohort.capacity !== null &&
+    occupied < cohort.capacity &&
+    enrollment.status !== 'CANCELLED'
+  );
+}
+
+export async function approvePaidReview(tx: Tx, id: string) {
+  const record = await tx.enrollment.findUnique({ where: { id } });
+  ensure(record, 404, 'ENROLLMENT', 'Enrollment not found.');
+  await lock(tx, 'enrollment:' + (record.applicationId ?? id));
+  await tx.$queryRaw`SELECT id FROM "Cohort" WHERE id=${record.cohortId} FOR UPDATE`;
+  const enrollment = await tx.enrollment.findUniqueOrThrow({
+    where: { id },
+    include: {
+      application: { include: { course: true } },
+      cohort: true,
+      payments: true,
+    },
+  });
+  const captures = enrollment.payments.filter((p) => p.verifiedAt);
+  const payment = captures[0];
+  ensure(
+    enrollment.status === 'REVIEW_REQUIRED' &&
+      enrollment.reviewReason === 'PAID_ELIGIBILITY_OR_CAPACITY_REVIEW' &&
+      captures.length === 1 &&
+      payment.provider === 'razorpay' &&
+      payment.providerOrderId &&
+      payment.providerRef &&
+      payment.status === 'SUCCEEDED' &&
+      payment.refundedMinor === 0 &&
+      payment.amountMinor > 0 &&
+      payment.amountMinor === enrollment.amountMinor &&
+      payment.currency === enrollment.currency &&
+      enrollment.application?.userId === enrollment.userId &&
+      enrollment.application.courseId === enrollment.cohort.courseId &&
+      (await eligibleForActivation(tx, enrollment)),
+    409,
+    'REVIEW',
+    'A matching verified capture, eligible admission and available seat are required.',
+  );
+  await tx.enrollment.update({
+    where: { id },
+    data: {
+      status: 'ACTIVE',
+      activatedAt: new Date(),
+      reviewReason: null,
+      reservedUntil: null,
+    },
+  });
 }

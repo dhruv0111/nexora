@@ -165,6 +165,7 @@ it('restricts staff reports and refund requests to verified funds', async () => 
         data: {
           enrollmentId: e.id,
           amountMinor: 9100,
+          provider: 'razorpay',
           currency: 'INR',
           idempotencyKey: randomUUID(),
         },
@@ -198,6 +199,69 @@ it('restricts staff reports and refund requests to verified funds', async () => 
       (await db.enrollment.findUniqueOrThrow({ where: { id: e.id } })).status,
     ).toBe('PENDING');
     await db.refundRequest.deleteMany({ where: { paymentId: p.id } });
+  } finally {
+    await t.cleanup();
+  }
+});
+
+it('requires verified funds and an eligible admission for audited access approval', async () => {
+  const t = await fixture();
+  try {
+    const app = await t.accepted();
+    const e = await t.db.enrollment.create({
+      data: {
+        applicationId: app.id,
+        userId: t.student.id,
+        cohortId: t.cohort.id,
+        status: 'REVIEW_REQUIRED',
+        reviewReason: 'PAID_ELIGIBILITY_OR_CAPACITY_REVIEW',
+        amountMinor: 9100,
+        currency: 'INR',
+        agreedAt: new Date(),
+        agreementHash: 'fixture',
+      },
+    });
+    const input = {
+      enrollmentId: e.id,
+      reason: 'Verified seat and current agreement reviewed.',
+      confirm: true,
+    };
+    await expect(
+      mutate(t.admin.id, 'approve-paid-review', input),
+    ).rejects.toMatchObject({ status: 403 });
+    await t.db.user.update({
+      where: { id: t.admin.id },
+      data: { staffScope: 'SUPER_ADMIN' },
+    });
+    await expect(
+      mutate(t.admin.id, 'approve-paid-review', input),
+    ).rejects.toMatchObject({ status: 409 });
+    await t.db.payment.create({
+      data: {
+        enrollmentId: e.id,
+        amountMinor: 9100,
+        currency: 'INR',
+        provider: 'razorpay',
+        providerOrderId: randomUUID(),
+        providerRef: randomUUID(),
+        idempotencyKey: randomUUID(),
+        verifiedAt: new Date(),
+        status: 'SUCCEEDED',
+      },
+    });
+    const attempts = await Promise.allSettled([
+      mutate(t.admin.id, 'approve-paid-review', input),
+      mutate(t.admin.id, 'approve-paid-review', input),
+    ]);
+    expect(attempts.filter((a) => a.status === 'fulfilled')).toHaveLength(1);
+    expect(
+      await t.db.auditLog.count({
+        where: { entityId: e.id, action: 'PAID_ACCESS_REVIEW_APPROVED' },
+      }),
+    ).toBe(1);
+    expect(
+      (await t.db.enrollment.findUniqueOrThrow({ where: { id: e.id } })).status,
+    ).toBe('ACTIVE');
   } finally {
     await t.cleanup();
   }

@@ -79,7 +79,7 @@ export function Homepage() {
             preload
             fetchPriority="high"
             quality={85}
-            decoding="sync"
+            decoding="async"
             className="hero-art"
           />
         </div>

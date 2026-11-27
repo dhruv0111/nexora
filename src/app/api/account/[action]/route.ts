@@ -14,23 +14,27 @@ export async function POST(
     const { action } = await params;
     const b = await readJson(req, 4096);
     await limited('all', 'account-global', 120);
+    if (action === 'change-password') {
+      const session = await getServerSession(authOptions);
+      ensure(session?.user, 401, 'SESSION', 'Sign in first.');
+      await limited(session.user.id, 'change-password', 8);
+      return change(session.user.id, b);
+    }
     const key =
-      typeof b === 'object' && b && 'email' in b
-        ? String(b.email).toLowerCase().slice(0, 254)
-        : 'token';
+      b && typeof b === 'object'
+        ? 'email' in b
+          ? String(b.email).toLowerCase().trim().slice(0, 254)
+          : 'token' in b
+            ? String(b.token).slice(0, 64)
+            : 'invalid'
+        : 'invalid';
     await limited(key, 'account:' + action, action === 'sign-in' ? 12 : 8);
     if (action === 'register' || action === 'forgot-password')
       return requestLink(action, b);
     if (action === 'verify-email' || action === 'reset-password')
       return redeem(action, b);
-    if (action === 'change-password') {
-      const s = await getServerSession(authOptions);
-      ensure(s?.user, 401, 'SESSION', 'Sign in first.');
-      return change(s.user.id, b);
-    }
     if (action === 'sign-in') {
-      const r = await login(b),
-        secure = env.NEXTAUTH_URL!.startsWith('https://');
+      const secure = env.NEXTAUTH_URL!.startsWith('https://');
       ensure(
         secure ||
           ['localhost', '127.0.0.1', '[::1]'].includes(
@@ -40,6 +44,7 @@ export async function POST(
         'HTTPS',
         'Use HTTPS for non-local authentication.',
       );
+      const r = await login(b);
       (await cookies()).set(
         (secure ? '__Secure-' : '') + 'next-auth.session-token',
         r.sessionToken,

@@ -133,6 +133,8 @@
 }
 .career-filter input,
 .career-filter select {
+  width: 100%;
+  min-width: 0;
   min-height: 44px;
   max-width: 100%;
   background: #100d1a;
